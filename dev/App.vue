@@ -14,8 +14,6 @@
   import { defineComponent, ref } from 'vue'
   import { createStore } from '../src'
 
-
-
   export default defineComponent({
     setup(){
       const name = ref('sdsdf')
@@ -35,7 +33,6 @@
         }
       })
 
-      console.log(store.commit('changeName', null))
       return {
         store,
         name

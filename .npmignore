@@ -1,0 +1,17 @@
+build
+dev
+node_modules
+src
+
+.git
+.github
+.gitignore
+.husky
+.babelrc
+.browserslistrc
+.prettierignore
+.prettierrc
+.editorconfig
+.eslintrc
+tsconfig.json
+package-lock.json

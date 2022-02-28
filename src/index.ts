@@ -3,21 +3,24 @@ import { reactive } from 'vue'
 // Helpers
 import { logError, isAsyncFunction, hasAsyncLogic } from './helpers'
 // Types
-import { IStore, IStoreOptions, Keys } from './types'
+import { Store, StoreOptions, Keys } from './types'
 
 // createSore can be called to create
 // a store template based on the given
 // options, which include initial state,
 // mutations and actions
-export const createStore = <S extends IStoreOptions>(
-  options: S
-): IStore<S> => {
+export const createStore = <S extends StoreOptions>(options: S): Store<S> => {
   // create reactive state root
   const state = reactive<S[Keys.state]>(options.state)
   // commit a mutation to the present state
   const commit = <K extends keyof S[Keys.mutations]>(type: K, payload: any) => {
     // get the mutation
     const fn = options.mutations?.[type as string]
+    // If the type doesn't exist in mutations
+    // output the error message to the console
+    if (!fn) {
+      return logError('unknown mutation type')
+    }
     // if the mutation is an async function
     // output the error message to the console
     if (isAsyncFunction(fn!)) {
@@ -34,10 +37,7 @@ export const createStore = <S extends IStoreOptions>(
       )
     }
     // if the mutation exist run the mutation
-    if (fn) return fn(state, payload)
-    // If the type doesn't exist in mutations
-    // output the error message to the console
-    logError('unknown mutation type')
+    return fn(state, payload)
   }
   // dispatch a action for synchronous or asynchronous tasks
   const dispatch = <K extends keyof S[Keys.actions]>(
@@ -46,11 +46,13 @@ export const createStore = <S extends IStoreOptions>(
   ) => {
     // get the action
     const fn = options.actions?.[type as string]
-    // if action exists run the action
-    if (fn) return fn({ commit, dispatch, state }, payload)
     // If the type doesn't exist in actions
     // output the warning message to the console
-    logError('unknown action type')
+    if (!fn) {
+      return logError('unknown action type')
+    }
+    // if action exists run the action
+    return fn({ commit, dispatch, state }, payload)
   }
 
   return {

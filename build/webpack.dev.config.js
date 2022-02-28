@@ -5,12 +5,10 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const { merge } = require('webpack-merge')
 const baseConfig = require('./webpack.config')
 
-const resolve = pathStr => path.resolve(__dirname, pathStr)
-
 const devConfig = (env = {}) => merge(baseConfig(env), {
   devtool: 'eval-cheap-module-source-map',
   entry: {
-    main: resolve('../dev/main.ts')
+    main: path.resolve(__dirname, '../dev/main.ts')
   },
   output: {
     publicPath: 'http://localhost:3000/'
@@ -25,7 +23,7 @@ const devConfig = (env = {}) => merge(baseConfig(env), {
     new CleanWebpackPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
-      title: 'dev',
+      title: 'vue-store dev',
       hash: false,
       template: resolve('../dev') + '/index.html',
       filename: 'index.html',

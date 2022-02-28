@@ -5,7 +5,7 @@
     "strict": true,
     "allowJs": true,
     "incremental": true,
-    "noEmit": false,
+    "noEmit": true,
     "noImplicitAny": false,
     "noEmitOnError": true,
     "strictNullChecks": true,
@@ -33,8 +33,6 @@
     "lib": [
       "esnext",
       "scripthost",
-      "dom",
-      "dom.iterable",
       "webworker"
     ],
     "plugins": [
@@ -54,8 +52,8 @@
     ]
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.vue"
+    "src/*.ts",
+    "dev/*.ts"
   ],
   "exclude": [
     "node_modules"

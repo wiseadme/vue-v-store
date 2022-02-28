@@ -1,15 +1,6 @@
-const path = require('path')
 const webpack = require('webpack')
 const TerserPlugin = require('terser-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
-
-// const resolve = pathStr => path.resolve(__dirname, pathStr)
-
-// const PATH = {
-//   src: resolve('../src'),
-//   dist: resolve('../dist'),
-//   dev: resolve('../dev')
-// }
 
 module.exports = (env = {}) => {
   return {
@@ -31,6 +22,9 @@ module.exports = (env = {}) => {
               conditionals: true,
               dead_code: true,
               evaluate: true,
+            },
+            output: {
+              comments: false
             },
             mangle: {
               safari10: true,

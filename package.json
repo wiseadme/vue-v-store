@@ -1,22 +1,40 @@
 {
-  "name": "vue-store",
-  "version": "1.0.0",
-  "description": "simple vue store plugin",
+  "name": "@v/store",
+  "version": "0.1.0",
+  "description": "Lightweight Vue 3 composition API-compatible store plugin",
   "sideEffects": false,
   "main": "dist/index.js",
   "module": "dist/index.js",
-  "types": "types/index.d.ts",
+  "types": "dist/types/index.d.ts",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack serve --hot --config ./build/webpack.dev.config.js",
+    "dev": "webpack serve --hot --config ./build/webpack.dev.config.js",
     "build": "tsc -p tsconfig.json & webpack --config ./build/webpack.prod.config.js",
-    "prettier": "prettier --write --config ./.prettierrc './src/**/*.{ts,tsx}'",
+    "prettier": "prettier --write --config ./.prettierrc './src'",
     "lint": "eslint '**/*.ts' --ignore-pattern node_modules/",
     "lint:fix": "eslint '**/*.ts' --fix --ignore-pattern node_modules/",
     "prepare": "husky install"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wiseadme/vue-store.git",
+    "directory": "/"
+  },
+  "bugs": {
+    "url": "https://github.com/wiseadme/vue-store/issues",
+    "email": "wiseadme@gmail.com"
+  },
+  "keywords": [
+    "vue",
+    "vue-store",
+    "store",
+    "composition api"
+  ],
+  "author": {
+    "name": "Anar Allkhverdiev",
+    "email": "wiseadme@gmail.com",
+    "url": "https://projs.net"
+  },
+  "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.17.5",
     "@babel/preset-env": "^7.16.11",
@@ -25,6 +43,7 @@
     "@vue/compiler-sfc": "^3.2.31",
     "babel-loader": "^8.2.3",
     "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^10.2.4",
     "cross-env": "^7.0.3",
     "css-loader": "^6.6.0",
     "editorconfig-checker": "^4.0.2",
@@ -46,7 +65,8 @@
     "webpack": "^5.69.1",
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.7.4",
-    "webpack-merge": "^5.8.0"
+    "webpack-merge": "^5.8.0",
+    "webpack-node-externals": "^3.0.0"
   },
   "peerDependencies": {
     "vue": "^3.2.31"
