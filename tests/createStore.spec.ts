@@ -60,19 +60,19 @@ describe('createStore', () => {
     expect(stub).toHaveBeenCalled()
   })
 
-  it('should change "state" from action without calling mutation', () => {
+  it('should change "state" of the store from еру action without calling a mutation', () => {
     store.dispatch('mutateStateFromAction', user)
     expect(store.state.user.name).toEqual(user.name)
   })
 
-  it('should log error on async mutation', async () => {
+  it('should log the error if mutation is an async function', async () => {
     const spyOnError = jest.spyOn(console, 'error')
     storeOptions.mutations.setUser = async () => true
     await store.commit('setUser')
     expect(spyOnError).toHaveBeenCalled()
   })
 
-  it('should log error on "setTimeout" in mutations', () => {
+  it('should log the error if "setTimeout" called in mutation', () => {
     const spyOnError = jest.spyOn(console, 'error')
     storeOptions.mutations.setUser = () => setTimeout(() => true)
     store.commit('setUser')
