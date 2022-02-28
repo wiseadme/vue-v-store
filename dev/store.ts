@@ -19,7 +19,7 @@ export interface IUsersState {
 }
 
 export interface IUsersMutations {
-  setUsers: (state: UnwrapNestedRefs<IUsersState>, users: Users) => void
+  setUsers: (state: IUsersState, users: Users) => void
   setUsersUrl: (state: UnwrapNestedRefs<IUsersState>, url: string) => void
 }
 

@@ -1,7 +1,7 @@
 {
   "name": "@v/store",
   "version": "0.1.0",
-  "description": "Lightweight Vue 3 composition API-compatible store plugin",
+  "description": "Minimalistic and lightweight Vue 3 composition API-compatible store pattern plugin",
   "sideEffects": false,
   "main": "dist/index.js",
   "module": "dist/index.js",

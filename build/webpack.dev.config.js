@@ -25,7 +25,7 @@ const devConfig = (env = {}) => merge(baseConfig(env), {
     new HtmlWebpackPlugin({
       title: 'vue-store dev',
       hash: false,
-      template: resolve('../dev') + '/index.html',
+      template: path.resolve(__dirname,'../dev') + '/index.html',
       filename: 'index.html',
       inject: true,
       collapseWhitespace: true,
