@@ -48,13 +48,15 @@
       "@vue/compiler-ssr/dist/compiler-ssr",
       "@vue/reactivity/dist/reactivity",
       "@vue/runtime-core/dist/runtime-core",
-      "@vue/runtime-dom/dist/runtime-dom"
+      "@vue/runtime-dom/dist/runtime-dom",
+      "@types/jest",
     ]
   },
   "include": [
     "src/*.ts",
     "dev/*.ts",
     "dev/*.vue",
+    "tests/*.spec.ts"
   ],
   "exclude": [
     "node_modules"
