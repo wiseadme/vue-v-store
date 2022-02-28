@@ -8,7 +8,7 @@
   "types": "dist/types/index.d.ts",
   "scripts": {
     "dev": "webpack serve --hot --config ./build/webpack.dev.config.js",
-    "build": "tsc -p tsconfig.json & webpack --config ./build/webpack.prod.config.js",
+    "build": "tsc -p tsconfig.json && npm run test && webpack --config ./build/webpack.prod.config.js",
     "prettier": "prettier --write --config ./.prettierrc './src'",
     "test": "jest",
     "lint": "eslint '**/*.ts' --ignore-pattern node_modules/",
