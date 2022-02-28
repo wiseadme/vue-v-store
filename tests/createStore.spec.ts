@@ -60,7 +60,7 @@ describe('createStore', () => {
     expect(stub).toHaveBeenCalled()
   })
 
-  it('should change "state" of the store from еру action without calling a mutation', () => {
+  it('should change "state" of the store from the action without calling a mutation', () => {
     store.dispatch('mutateStateFromAction', user)
     expect(store.state.user.name).toEqual(user.name)
   })
