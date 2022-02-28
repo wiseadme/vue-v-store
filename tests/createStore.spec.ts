@@ -1,5 +1,4 @@
 import { createStore } from '../src/index'
-// import { isAsyncFunction } from '../src/helpers'
 import 'regenerator-runtime/runtime'
 
 describe('createStore', () => {
@@ -63,7 +62,6 @@ describe('createStore', () => {
 
   it('should change "state" from action without calling mutation', () => {
     store.dispatch('mutateStateFromAction', user)
-
     expect(store.state.user.name).toEqual(user.name)
   })
 
@@ -71,7 +69,6 @@ describe('createStore', () => {
     const spyOnError = jest.spyOn(console, 'error')
     storeOptions.mutations.setUser = async () => true
     await store.commit('setUser')
-
     expect(spyOnError).toHaveBeenCalled()
   })
 
@@ -79,7 +76,6 @@ describe('createStore', () => {
     const spyOnError = jest.spyOn(console, 'error')
     storeOptions.mutations.setUser = () => setTimeout(() => true)
     store.commit('setUser')
-
     expect(spyOnError).toHaveBeenCalled()
   })
 })
