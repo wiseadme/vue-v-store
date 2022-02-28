@@ -8,11 +8,10 @@
   "types": "types/index.d.ts",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack serve --hot --config ./build/webpack.dev.config.js",
-    "build": "tsc -p tsconfig.prod.json & webpack --config ./build/webpack.prod.config.js",
-    "build:ts": "tsc -p tsconfig.prod.json",
+    "build": "tsc -p tsconfig.json & webpack --config ./build/webpack.prod.config.js",
     "prettier": "prettier --write --config ./.prettierrc './src/**/*.{ts,tsx}'",
-    "lint": "eslint '**/*.vue' --ignore-pattern node_modules/",
-    "lint:fix": "eslint '**/*.vue' --fix --ignore-pattern node_modules/",
+    "lint": "eslint '**/*.ts' --ignore-pattern node_modules/",
+    "lint:fix": "eslint '**/*.ts' --fix --ignore-pattern node_modules/",
     "prepare": "husky install"
   },
   "keywords": [],
