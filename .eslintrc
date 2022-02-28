@@ -6,7 +6,6 @@
     "sourceType": "module"
   },
   "extends": [
-    "plugin:vue/vue3-recommended"
   ],
   "env": {
     "node": true,
@@ -20,27 +19,6 @@
     "no-multiple-empty-lines": "error",
     "no-console": "error",
     "no-debugger": "error",
-    "no-unused-vars": "error",
-    "vue/html-quotes": "error",
-    "vue/html-self-closing": "off",
-    "vue/html-closing-bracket-spacing": "off",
-    "vue/attribute-hyphenation": "error",
-    "vue/component-definition-name-casing": [
-      "error",
-      "kebab-case"
-    ],
-    "vue/no-setup-props-destructure": "off",
-    "vue/max-attributes-per-line": [
-      "error",
-      {
-        "singleline": 1,
-        "multiline": 1
-      }
-    ],
-    "vue/html-indent": ["error", 2, {
-      "baseIndent": 1,
-      "switchCase": 1,
-      "ignores": []
-    }]
+    "no-unused-vars": "error"
   }
 }
