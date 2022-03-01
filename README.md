@@ -9,7 +9,7 @@
 ## Installing
 
 ```
-npm install --save @v/store
+npm install --save vue-v-store
 ```
 
 ## Quick start

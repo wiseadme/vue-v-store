@@ -17,11 +17,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wiseadme/v-store.git",
+    "url": "git+https://github.com/wiseadme/vue-v-store.git",
     "directory": "/"
   },
   "bugs": {
-    "url": "https://github.com/wiseadme/v-store/issues",
+    "url": "https://github.com/wiseadme/vue-v-store/issues",
     "email": "wiseadme@gmail.com"
   },
   "keywords": [
@@ -31,7 +31,7 @@
     "composition api"
   ],
   "author": {
-    "name": "Anar Allkhverdiev",
+    "name": "Anar Allakhverdiev",
     "email": "wiseadme@gmail.com",
     "url": "https://projs.net"
   },
