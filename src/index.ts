@@ -19,7 +19,7 @@ export const createStore = <S extends StoreOptions>(options: S): Store<S> => {
     // If the type doesn't exist in mutations
     // output the error message to the console
     if (!fn) {
-      return logError('unknown mutation type')
+      return logError('ERROR[store]: unknown mutation type')
     }
     // if the mutation is an async function
     // output the error message to the console
@@ -33,11 +33,11 @@ export const createStore = <S extends StoreOptions>(options: S): Store<S> => {
     if (hasAsyncLogic(fn!)) {
       return logError(
         'ERROR[store]: asynchronous logic, including timers ' +
-          'and promises, cannot be used in mutations'
+        'and promises, cannot be used in mutations'
       )
     }
     // if the mutation exist run the mutation
-    return fn(state, payload)
+    fn(state, payload)
   }
   // dispatch a action for synchronous or asynchronous tasks
   const dispatch = <K extends keyof S[Keys.actions]>(
@@ -49,7 +49,7 @@ export const createStore = <S extends StoreOptions>(options: S): Store<S> => {
     // If the type doesn't exist in actions
     // output the warning message to the console
     if (!fn) {
-      return logError('unknown action type')
+      return logError('ERROR[store]: unknown action type')
     }
     // if action exists run the action
     return fn({ commit, dispatch, state }, payload)
