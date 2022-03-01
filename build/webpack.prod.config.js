@@ -12,7 +12,7 @@ const buildConfig = (env = {}) => merge(baseConfig(env), {
     filename: `[name].js`,
     path: path.resolve(__dirname, '../dist'),
     publicPath: '/dist/',
-    library: '@v/store',
+    library: 'vue-v-store',
     libraryTarget: 'umd',
     umdNamedDefine: true,
     globalObject: 'typeof self !== \'undefined\' ? self : this'

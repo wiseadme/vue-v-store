@@ -1,5 +1,5 @@
 {
-  "name": "@v/store",
+  "name": "vue-v-store",
   "version": "0.1.0",
   "description": "Minimalistic and lightweight Vue 3 composition API-compatible store pattern plugin",
   "sideEffects": false,
@@ -54,7 +54,6 @@
     "eslint-loader": "^4.0.2",
     "eslint-plugin-vue": "^8.4.1",
     "html-webpack-plugin": "^5.5.0",
-    "husky": "^7.0.0",
     "jest": "^27.5.1",
     "mini-css-extract-plugin": "^2.5.3",
     "postcss-loader": "^6.2.1",
@@ -73,7 +72,8 @@
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.7.4",
     "webpack-merge": "^5.8.0",
-    "webpack-node-externals": "^3.0.0"
+    "webpack-node-externals": "^3.0.0",
+    "husky": "^7.0.0"
   },
   "peerDependencies": {
     "vue": "^3.2.31"

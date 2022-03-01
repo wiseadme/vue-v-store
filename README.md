@@ -1,4 +1,4 @@
-# v-store
+# vue-v-store
 
 #### Minimalistic and lightweight Vue 3 composition API-compatible store pattern plugin
 
@@ -17,7 +17,7 @@ npm install --save @v/store
 * To start using the plugin, simply import the ```createStore``` function and run it with the passed store parameters:
 
 ```typescript
-import {createStore} from '@v/store'
+import {createStore} from 'vue-v-store'
 import {IUsersStore, User} from '../types'
 import {api} from '../api'
 
@@ -149,10 +149,10 @@ const actions = {
 
 # Types
 
-* ```v-store``` is implemented using ```typescript``` and therefore has full typing support:
+* ```vue-v-store``` is implemented using ```typescript``` and therefore has full typing support:
 
 ```typescript
-import {Store, StoreOptions} from '@v/store'
+import {Store, StoreOptions} from 'vue-v-store'
 
 type Maybe<T> = T | null
 
@@ -183,9 +183,9 @@ export interface IUsersActions {
 
 # About
 
-* ```v-store``` is a plugin that will allow you to create the store of your application wherever it is convenient for you.
+* ```vue-v-store``` is a plugin that will allow you to create the store of your application wherever it is convenient for you.
 You can create the store in ```vue``` components or in third-party ```js``` or ```ts``` files.
 
-* ```v-store``` is an open-source project, so if you want to participate in its development, it will be enough for you to make a copy of the repository using ```fork```, and then create a ```pull request``` and wait for confirmation of your changes.
+* ```vue-v-store``` is an open-source project, so if you want to participate in its development, it will be enough for you to make a copy of the repository using ```fork```, and then create a ```pull request``` and wait for confirmation of your changes.
 
 ##### Thanks for reading the documentation, and I hope you enjoy working with this plugin

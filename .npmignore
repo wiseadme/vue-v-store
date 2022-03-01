@@ -1,9 +1,10 @@
 build
 dev
 node_modules
-src
+tests
 
 .git
+.idea
 .github
 .gitignore
 .husky
@@ -13,5 +14,6 @@ src
 .prettierrc
 .editorconfig
 .eslintrc
+jest.config.js
 tsconfig.json
 package-lock.json
