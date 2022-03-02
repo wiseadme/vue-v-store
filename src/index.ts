@@ -33,7 +33,7 @@ export const createStore = <S extends StoreOptions>(options: S): Store<S> => {
     if (hasAsyncLogic(fn!)) {
       return logError(
         'ERROR[store]: asynchronous logic, including timers ' +
-        'and promises, cannot be used in mutations'
+          'and promises, cannot be used in mutations'
       )
     }
     // if the mutation exist run the mutation
