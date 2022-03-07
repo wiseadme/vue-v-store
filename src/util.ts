@@ -17,10 +17,7 @@ export const createSubscribers = () => {
     return sub
   }
 
-  const subscribeMutation = (
-    type: string,
-    fn: Function | SubscriberOptions
-  ) => {
+  const subscribeMutation = (type: string, fn: Function | SubscriberOptions) => {
     const subscriber = prepareSubscription(mutationSubs, fn, type)
 
     return () => {
@@ -30,22 +27,17 @@ export const createSubscribers = () => {
     }
   }
 
-  const subscribeAction = (
-    type: string,
-    fn: Function | SubscriberOptions
-  ) => {
+  const subscribeAction = (type: string, fn: Function | SubscriberOptions) => {
     const subscriber = prepareSubscription(actionSubs, fn, type)
 
     return () => {
-      actionSubs[type] = actionSubs[type].filter((sub) => sub !== subscriber)
+      actionSubs[type] = actionSubs[type].filter(
+        (sub) => sub !== subscriber
+      )
     }
   }
 
-  const notifySubscribers = (
-    type: string,
-    subs: Subscribers,
-    isAfter = false
-  ) => {
+  const notifySubscribers = (type: string, subs: Subscribers, isAfter = false) => {
     const subsType = isAfter ? 'after' : 'before'
 
     subs[type]
@@ -59,6 +51,6 @@ export const createSubscribers = () => {
     mutationSubs,
     subscribeMutation,
     subscribeAction,
-    notifySubscribers,
+    notifySubscribers
   }
 }

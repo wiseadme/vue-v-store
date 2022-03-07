@@ -9,10 +9,10 @@
   "scripts": {
     "dev": "webpack serve --hot --config ./build/webpack.dev.config.js",
     "build": "tsc -p tsconfig.json && npm run test && webpack --config ./build/webpack.prod.config.js",
-    "prettier": "prettier --write --config ./.prettierrc './src'",
     "test": "jest",
     "lint": "eslint '**/*.ts' --ignore-pattern node_modules/",
     "lint:fix": "eslint '**/*.ts' --fix --ignore-pattern node_modules/",
+    "lint:editorconfig": "editorconfig-checker",
     "prepare": "husky install"
   },
   "repository": {
@@ -59,7 +59,6 @@
     "mini-css-extract-plugin": "^2.5.3",
     "postcss-loader": "^6.2.1",
     "postcss-preset-env": "^7.4.1",
-    "prettier": "^2.5.1",
     "regenerator-runtime": "^0.13.9",
     "style-loader": "^3.3.1",
     "terser-webpack-plugin": "^5.3.1",

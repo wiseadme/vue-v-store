@@ -14,31 +14,29 @@ export const createStore = <S extends StoreOptions>(options: S): Store<S> => {
     mutationSubs,
     subscribeMutation,
     subscribeAction,
-    notifySubscribers,
+    notifySubscribers
   } = createSubscribers()
 
-  const commit = <K extends keyof S[Keys.mutations]>(type: K, payload: any) => {
-    const fn = options.mutations?.[type as string]
+  const commit = <K extends keyof S[Keys.mutations]>(type: K & string, payload: any) => {
+    const fn = options.mutations?.[type]
 
     if (!fn) {
-      return logError(`ERROR[store]: unknown mutation type: ${type}`)
+      return logError(`ERROR[store]: unknown mutation type: ${ type }`)
     }
 
     if (isAsyncFunction(fn!)) {
-      return logError(
-        'ERROR[store]: mutation can only be a synchronous function'
-      )
+      return logError('ERROR[store]: mutation can only be a synchronous function')
     }
 
     if (hasAsyncLogic(fn!)) {
       return logError(
         'ERROR[store]: asynchronous logic, including timers ' +
-          'and promises, cannot be used in mutations'
+        'and promises, cannot be used in mutations'
       )
     }
     // notifying all subscribers before the mutation call
     try {
-      notifySubscribers(type as string, mutationSubs)
+      notifySubscribers(type, mutationSubs)
     } catch (err) {
       logError('ERROR[store]: error in before mutation subscribers')
     }
@@ -46,25 +44,25 @@ export const createStore = <S extends StoreOptions>(options: S): Store<S> => {
     fn(state, payload)
     // notifying all subscribers after the mutation call
     try {
-      notifySubscribers(type as string, mutationSubs, true)
+      notifySubscribers(type, mutationSubs, true)
     } catch (err) {
       logError('ERROR[store]: error in before mutation subscribers')
     }
   }
 
   const dispatch = async <K extends keyof S[Keys.actions]>(
-    type: K,
+    type: K & string,
     payload?: any
   ) => {
-    const fn = options.actions?.[type as string]
+    const fn = options.actions?.[type]
 
     if (!fn) {
-      return logError(`ERROR[store]: unknown action type: ${type}`)
+      return logError(`ERROR[store]: unknown action type: ${ type }`)
     }
 
     // notifying all subscribers before the action call
     try {
-      notifySubscribers(type as string, actionSubs)
+      notifySubscribers(type, actionSubs)
     } catch (err) {
       logError('ERROR[store]: error in before action subscribers')
     }
@@ -73,7 +71,7 @@ export const createStore = <S extends StoreOptions>(options: S): Store<S> => {
 
     // notifying all subscribers after the action call
     try {
-      notifySubscribers(type as string, actionSubs, true)
+      notifySubscribers(type, actionSubs, true)
     } catch (err) {
       logError('ERROR[store]: error in after action subscribers')
     }
@@ -86,6 +84,6 @@ export const createStore = <S extends StoreOptions>(options: S): Store<S> => {
     commit,
     dispatch,
     subscribeAction,
-    subscribeMutation,
+    subscribeMutation
   }
 }
