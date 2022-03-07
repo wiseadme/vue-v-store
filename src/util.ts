@@ -1,4 +1,4 @@
-import { Subscribers, SubscriberOptions } from '@/types'
+import { Subscribers, SubscriberOptions } from './types'
 
 export const createSubscribers = () => {
   const mutationSubs: Subscribers = {}
