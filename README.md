@@ -152,19 +152,25 @@ const actions = {
 
 ```typescript
 // Subscription to a mutation that will be triggered before the mutation
-store.subscribeMutation('setUsers', () => console.log('Will be called before "setUsers" mutation'))
-// or you can pass a subscriber options object
-store.subscribeMutation('setUsers', {
+const unsubscribe = store.subscribeMutation('setUsers', () => console.log('Will be called before "setUsers" mutation'))
+```
+* or you can pass a subscriber options object
+```typescript
+const unsubscribe = store.subscribeMutation('setUsers', {
   before: () => console.log('Will be called before "setUsers" mutation'),
   after: () => console.log('Will be called after "setUsers" mutation')
 })
 ```
 * Similarly, you can subscribe to actions
 ```typescript
-store.subscribeAction('fetchUsers', {
+const unsubscribe = store.subscribeAction('fetchUsers', {
   before: () => console.log('Will be called before "fetchUsers" action'),
   after: () => console.log('Will be called after "fetchUsers" action')
 })
+```
+* As can be seen from the example, the "subscribeMutation" and "subscribeAction" methods return the unsubscribe method. It will be enough for you to simply call him to unsubscribe
+```typescript
+unsubscribe()
 ```
 
 # Types
