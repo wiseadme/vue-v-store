@@ -56,36 +56,36 @@ export const useUsersStore = () => store
 ```vue
 
 <script lang="ts">
-import {defineComponent} from 'vue'
-import {useUsersStore} from '../users/store'
+  import {defineComponent} from 'vue'
+  import {useUsersStore} from '../users/store'
 
-export default defineComponent({
-  setup() {
-    const $store = useUsersStore()
+  export default defineComponent({
+      setup() {
+          const $store = useUsersStore()
 
-    const getUsers = () => {
-      $store.dispatch('fetchUsers')
-    }
+          const getUsers = () => {
+              $store.dispatch('fetchUsers')
+          }
 
-    return {
-      $store,
-      getUsers
-    }
-  }
+          return {
+              $store,
+              getUsers
+          }
+      }
 })
 </script>
 <template>
-  <div class="page">
-    <span v-if="$store.state.users">
-      users count: {{ $store.state.users.length }}
-    </span>
-  </div>
-  <button @click="getUsers">
-    FETCH USERS
-  </button>
-  <button @click="$store.dispatch('saveNewUser', {name: 'Alex', age: 25})">
-    SAVE USER
-  </button>
+    <div class="page">
+        <span v-if="$store.state.users">
+            users count: {{ $store.state.users.length }}
+        </span>
+    </div>
+    <button @click="getUsers">
+        FETCH USERS
+    </button>
+    <button @click="$store.dispatch('saveNewUser', {name: 'Alex', age: 25})">
+        SAVE USER
+    </button>
 </template>
 ```
 
