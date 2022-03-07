@@ -5,32 +5,38 @@ describe('createStore', () => {
   const user = { name: 'Alex' }
   let store
   let storeOptions
+  let steps: number[] = []
 
   beforeEach(() => {
+    steps = []
     storeOptions = {
       state: {
-        user: null as any
+        user: null as any,
+        sub: false
       },
       mutations: {
-        setUser: (state, user) => state.user = user
+        setUser: (state, user) => {
+          state.user = user
+        },
+        setSub: (state, payload) => state.sub = payload
       },
       actions: {
-        async fetchUser({ commit }) {
+        async fetchUser({ commit }){
           const data = await new Promise(resolve => setTimeout(() => resolve(user), 1000))
           commit('setUser', data)
           return data
         },
 
-        async callAnotherAction({ dispatch }) {
-          const data = await dispatch('fetchUser')
-          return data
+        async callAnotherAction({ dispatch }){
+          return await dispatch('fetchUser')
         },
 
-        mutateStateFromAction({ state }, user) {
+        mutateStateFromAction({ state }, user){
           state.user = user
         }
       }
     }
+
     store = createStore(storeOptions)
   })
 
@@ -40,7 +46,7 @@ describe('createStore', () => {
     expect(store.commit).toBeTruthy()
   })
 
-  it('should test the "commit" executing inside the action', async () => {
+  it('should test execution of the "commit" inside the action', async () => {
     const stub = jest.fn()
     storeOptions.mutations.setUser = stub
     await store.dispatch('fetchUser')
@@ -53,7 +59,7 @@ describe('createStore', () => {
     expect(store.state.user.name).toEqual(user.name)
   })
 
-  it('should test the "dispatch" executing inside the action', async () => {
+  it('should test execution of the "dispatch" inside the action', async () => {
     const stub = jest.fn()
     storeOptions.actions.fetchUser = stub
     await store.dispatch('callAnotherAction')
@@ -65,17 +71,75 @@ describe('createStore', () => {
     expect(store.state.user.name).toEqual(user.name)
   })
 
-  it('should log the error if mutation is an async function', async () => {
+  it('should out the error if mutation is an async function', async () => {
     const spyOnError = jest.spyOn(console, 'error')
     storeOptions.mutations.setUser = async () => true
     await store.commit('setUser')
     expect(spyOnError).toHaveBeenCalled()
   })
 
-  it('should log the error if "setTimeout" called in mutation', () => {
+  it('should out the error if "setTimeout" called in mutation', () => {
     const spyOnError = jest.spyOn(console, 'error')
     storeOptions.mutations.setUser = () => setTimeout(() => true)
     store.commit('setUser')
     expect(spyOnError).toHaveBeenCalled()
+  })
+
+  it('should out the error message if mutation type does not exist', () => {
+    const spy = jest.spyOn(console, 'error')
+    store.commit('notExist')
+
+    expect(spy).toBeCalledWith('ERROR[store]: unknown mutation type: notExist')
+  })
+
+  it('should out the error message if action type does not exist', () => {
+    const spy = jest.spyOn(console, 'error')
+    store.dispatch('notExist')
+
+    expect(spy).toBeCalledWith('ERROR[store]: unknown action type: notExist')
+  })
+
+  it('should subscribe to the mutation and be executed before the mutation', () => {
+    const stub = () => steps.push(0)
+    storeOptions.mutations.setUser = () => steps.push(1)
+    store.subscribeMutation('setUser', stub)
+    store.commit('setUser', user)
+
+    expect(JSON.stringify(steps)).toEqual('[0,1]')
+  })
+
+  it('should subscribe to the mutation and be executed after the mutation', () => {
+    const stub = () => steps.push(0)
+    storeOptions.mutations.setUser = () => steps.push(1)
+    store.subscribeMutation('setUser', { after: stub })
+    store.commit('setUser', user)
+
+    expect(JSON.stringify(steps)).toEqual('[1,0]')
+  })
+
+  it('should subscribe to the action and be executed before the action', () => {
+    const stub = () => steps.push(0)
+    storeOptions.actions.test = () => steps.push(1)
+    store.subscribeAction('test', { before: stub })
+    store.dispatch('test')
+
+    expect(JSON.stringify(steps)).toEqual('[0,1]')
+  })
+
+  it('should subscribe to the action and be executed after the action', async () => {
+    const stub = () => steps.push(0)
+
+    storeOptions.actions.test = () => new Promise(resolve => {
+      setTimeout(() => {
+        steps.push(1)
+        resolve(true)
+      }, 1000)
+    })
+
+    store.subscribeAction('test', { after: stub })
+
+    await store.dispatch('test')
+
+    expect(JSON.stringify(steps)).toEqual('[1,0]')
   })
 })

@@ -27,8 +27,8 @@ export const createSubscribers = () => {
 
     subs[type]
       .slice()
-      .filter(sub => sub[subsType])
-      .forEach(sub => sub[subsType]!())
+      .filter((sub) => sub[subsType])
+      .forEach((sub) => sub[subsType]!())
   }
 
   return {
@@ -36,6 +36,6 @@ export const createSubscribers = () => {
     mutationSubs,
     subscribeMutation,
     subscribeAction,
-    notify
+    notify,
   }
 }

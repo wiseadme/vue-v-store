@@ -3,7 +3,7 @@ import { reactive } from 'vue'
 // Helpers
 import { logError, isAsyncFunction, hasAsyncLogic } from './helpers'
 // Subscribers
-import { createSubscribers } from './subscribe'
+import { createSubscribers } from './util'
 // Types
 import { Store, StoreOptions, Keys } from './types'
 
@@ -14,14 +14,14 @@ export const createStore = <S extends StoreOptions>(options: S): Store<S> => {
     mutationSubs,
     subscribeMutation,
     subscribeAction,
-    notify
+    notify,
   } = createSubscribers()
 
   const commit = <K extends keyof S[Keys.mutations]>(type: K, payload: any) => {
     const fn = options.mutations?.[type as string]
 
     if (!fn) {
-      return logError(`ERROR[store]: unknown mutation type ${ type }`)
+      return logError(`ERROR[store]: unknown mutation type: ${type}`)
     }
 
     if (isAsyncFunction(fn!)) {
@@ -33,7 +33,7 @@ export const createStore = <S extends StoreOptions>(options: S): Store<S> => {
     if (hasAsyncLogic(fn!)) {
       return logError(
         'ERROR[store]: asynchronous logic, including timers ' +
-        'and promises, cannot be used in mutations'
+          'and promises, cannot be used in mutations'
       )
     }
     // notifying all subscribers before the mutation call
@@ -59,7 +59,7 @@ export const createStore = <S extends StoreOptions>(options: S): Store<S> => {
     const fn = options.actions?.[type as string]
 
     if (!fn) {
-      return logError(`ERROR[store]: unknown action type ${ type }`)
+      return logError(`ERROR[store]: unknown action type: ${type}`)
     }
 
     // notifying all subscribers before the action call
@@ -86,6 +86,6 @@ export const createStore = <S extends StoreOptions>(options: S): Store<S> => {
     commit,
     dispatch,
     subscribeAction,
-    subscribeMutation
+    subscribeMutation,
   }
 }
