@@ -14,7 +14,7 @@ export const createStore = <S extends StoreOptions>(options: S): Store<S> => {
     mutationSubs,
     subscribeMutation,
     subscribeAction,
-    notify,
+    notifySubscribers,
   } = createSubscribers()
 
   const commit = <K extends keyof S[Keys.mutations]>(type: K, payload: any) => {
@@ -38,7 +38,7 @@ export const createStore = <S extends StoreOptions>(options: S): Store<S> => {
     }
     // notifying all subscribers before the mutation call
     try {
-      notify(type as string, mutationSubs)
+      notifySubscribers(type as string, mutationSubs)
     } catch (err) {
       logError('ERROR[store]: error in before mutation subscribers')
     }
@@ -46,7 +46,7 @@ export const createStore = <S extends StoreOptions>(options: S): Store<S> => {
     fn(state, payload)
     // notifying all subscribers after the mutation call
     try {
-      notify(type as string, mutationSubs, true)
+      notifySubscribers(type as string, mutationSubs, true)
     } catch (err) {
       logError('ERROR[store]: error in before mutation subscribers')
     }
@@ -64,7 +64,7 @@ export const createStore = <S extends StoreOptions>(options: S): Store<S> => {
 
     // notifying all subscribers before the action call
     try {
-      notify(type as string, actionSubs)
+      notifySubscribers(type as string, actionSubs)
     } catch (err) {
       logError('ERROR[store]: error in before action subscribers')
     }
@@ -73,7 +73,7 @@ export const createStore = <S extends StoreOptions>(options: S): Store<S> => {
 
     // notifying all subscribers after the action call
     try {
-      notify(type as string, actionSubs, true)
+      notifySubscribers(type as string, actionSubs, true)
     } catch (err) {
       logError('ERROR[store]: error in after action subscribers')
     }
