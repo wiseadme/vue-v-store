@@ -18,9 +18,14 @@ export enum Keys {
   actions = 'actions',
 }
 
-type State = { [key: infer U & U]: any }
-type Mutations = { [key: infer U & U]: (state: State, payload: any) => void }
-type Actions = { [key: infer U & U]: (context: Store, payload: any) => void }
+export type State = { [key: infer U & U]: any }
+export type Mutations = { [key: infer U & U]: (state: State, payload: any) => void }
+export type Actions = { [key: infer U & U]: (context: Store, payload: any) => void }
+export type Subscribers = { [key: infer U]: SubscriberOptions }
+export type SubscriberOptions = {
+  before?: Function,
+  after?: Function,
+}
 
 export type StoreOptions = {
   state: State
@@ -32,4 +37,6 @@ export type Store<S extends StoreOptions = {}> = {
   state: UnwrapNestedRefs<S[Keys.state]>
   commit: <K extends keyof S[Keys.mutations]>(type: K, payload: any) => void
   dispatch: <K extends keyof S[Keys.actions]>(type: K, payload?: any) => any
+  subscribeMutation: <K extends keyof S[Keys.mutations]>(type: K, fn: Function | SubscriberOptions) => void
+  subscribeAction: <K extends keyof S[Keys.actions]>(type: K, fn: Function | SubscriberOptions) => void
 }
