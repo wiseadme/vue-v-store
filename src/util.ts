@@ -30,7 +30,10 @@ export const createSubscribers = () => {
     }
   }
 
-  const subscribeAction = (type: string, fn: Function | SubscriberOptions) => {
+  const subscribeAction = (
+    type: string,
+    fn: Function | SubscriberOptions
+  ) => {
     const subscriber = prepareSubscription(actionSubs, fn, type)
 
     return () => {
