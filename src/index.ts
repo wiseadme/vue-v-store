@@ -2,62 +2,90 @@
 import { reactive } from 'vue'
 // Helpers
 import { logError, isAsyncFunction, hasAsyncLogic } from './helpers'
+// Subscribers
+import { createSubscribers } from './util'
 // Types
 import { Store, StoreOptions, Keys } from './types'
 
-// createSore can be called to create
-// a store template based on the given
-// options, which include initial state,
-// mutations and actions
 export const createStore = <S extends StoreOptions>(options: S): Store<S> => {
-  // create reactive state root
   const state = reactive<S[Keys.state]>(options.state)
-  // commit a mutation to the present state
+  const {
+    actionSubs,
+    mutationSubs,
+    subscribeMutation,
+    subscribeAction,
+    notify,
+  } = createSubscribers()
+
   const commit = <K extends keyof S[Keys.mutations]>(type: K, payload: any) => {
-    // get the mutation
     const fn = options.mutations?.[type as string]
-    // If the type doesn't exist in mutations
-    // output the error message to the console
+
     if (!fn) {
-      return logError('ERROR[store]: unknown mutation type')
+      return logError(`ERROR[store]: unknown mutation type: ${type}`)
     }
-    // if the mutation is an async function
-    // output the error message to the console
+
     if (isAsyncFunction(fn!)) {
       return logError(
         'ERROR[store]: mutation can only be a synchronous function'
       )
     }
-    // if the mutation involves asynchronous logic
-    // output the error message to the console
+
     if (hasAsyncLogic(fn!)) {
       return logError(
         'ERROR[store]: asynchronous logic, including timers ' +
           'and promises, cannot be used in mutations'
       )
     }
-    // if the mutation exist run the mutation
+    // notifying all subscribers before the mutation call
+    try {
+      notify(type as string, mutationSubs)
+    } catch (err) {
+      logError('ERROR[store]: error in before mutation subscribers')
+    }
+
     fn(state, payload)
+    // notifying all subscribers after the mutation call
+    try {
+      notify(type as string, mutationSubs, true)
+    } catch (err) {
+      logError('ERROR[store]: error in before mutation subscribers')
+    }
   }
-  // dispatch a action for synchronous or asynchronous tasks
-  const dispatch = <K extends keyof S[Keys.actions]>(
+
+  const dispatch = async <K extends keyof S[Keys.actions]>(
     type: K,
     payload?: any
   ) => {
-    // get the action
     const fn = options.actions?.[type as string]
-    // If the type doesn't exist in actions
-    // output the warning message to the console
+
     if (!fn) {
-      return logError('ERROR[store]: unknown action type')
+      return logError(`ERROR[store]: unknown action type: ${type}`)
     }
-    // if action exists run the action
-    return fn({ commit, dispatch, state }, payload)
+
+    // notifying all subscribers before the action call
+    try {
+      notify(type as string, actionSubs)
+    } catch (err) {
+      logError('ERROR[store]: error in before action subscribers')
+    }
+
+    const result = await fn({ commit, dispatch, state }, payload)
+
+    // notifying all subscribers after the action call
+    try {
+      notify(type as string, actionSubs, true)
+    } catch (err) {
+      logError('ERROR[store]: error in after action subscribers')
+    }
+
+    return result
   }
 
   return {
     state,
     commit,
     dispatch,
+    subscribeAction,
+    subscribeMutation,
   }
 }

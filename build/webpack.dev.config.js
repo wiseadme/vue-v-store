@@ -8,7 +8,10 @@ const baseConfig = require('./webpack.config')
 const devConfig = (env = {}) => merge(baseConfig(env), {
   devtool: 'eval-cheap-module-source-map',
   entry: {
-    main: path.resolve(__dirname, '../dev/main.ts')
+    main: [
+      'regenerator-runtime/runtime.js',
+      path.resolve(__dirname, '../dev/main.ts')
+    ]
   },
   output: {
     publicPath: 'http://localhost:3000/'

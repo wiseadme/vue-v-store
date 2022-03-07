@@ -147,6 +147,26 @@ const actions = {
 }
 ```
 
+# Subscriptions
+* You can subscribe to mutations and actions and call side effects
+
+```typescript
+// Subscription to a mutation that will be triggered before the mutation
+store.subscribeMutation('setUsers', () => console.log('Will be called before "setUsers" mutation'))
+// or you can pass a subscriber options object
+store.subscribeMutation('setUsers', {
+  before: () => console.log('Will be called before "setUsers" mutation'),
+  after: () => console.log('Will be called after "setUsers" mutation')
+})
+```
+* Similarly, you can subscribe to actions
+```typescript
+store.subscribeAction('fetchUsers', {
+  before: () => console.log('Will be called before "fetchUsers" action'),
+  after: () => console.log('Will be called after "fetchUsers" action')
+})
+```
+
 # Types
 
 * ```vue-v-store``` is implemented using ```typescript``` and therefore has full typing support:
