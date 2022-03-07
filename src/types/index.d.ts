@@ -44,9 +44,9 @@ export type Store<S extends StoreOptions = {}> = {
   subscribeMutation: <K extends keyof S[Keys.mutations]>(
     type: K,
     fn: Function | SubscriberOptions
-  ) => void
+  ) => () => void
   subscribeAction: <K extends keyof S[Keys.actions]>(
     type: K,
     fn: Function | SubscriberOptions
-  ) => void
+  ) => () => void
 }

@@ -100,34 +100,34 @@ describe('createStore', () => {
   })
 
   it('should subscribe to the mutation and be executed before the mutation', () => {
-    const stub = () => steps.push(0)
+    const subscriber = () => steps.push(0)
     storeOptions.mutations.setUser = () => steps.push(1)
-    store.subscribeMutation('setUser', stub)
+    store.subscribeMutation('setUser', subscriber)
     store.commit('setUser', user)
 
     expect(JSON.stringify(steps)).toEqual('[0,1]')
   })
 
   it('should subscribe to the mutation and be executed after the mutation', () => {
-    const stub = () => steps.push(0)
+    const subscriber = () => steps.push(0)
     storeOptions.mutations.setUser = () => steps.push(1)
-    store.subscribeMutation('setUser', { after: stub })
+    store.subscribeMutation('setUser', { after: subscriber })
     store.commit('setUser', user)
 
     expect(JSON.stringify(steps)).toEqual('[1,0]')
   })
 
   it('should subscribe to the action and be executed before the action', () => {
-    const stub = () => steps.push(0)
+    const subscriber = () => steps.push(0)
     storeOptions.actions.test = () => steps.push(1)
-    store.subscribeAction('test', { before: stub })
+    store.subscribeAction('test', { before: subscriber })
     store.dispatch('test')
 
     expect(JSON.stringify(steps)).toEqual('[0,1]')
   })
 
   it('should subscribe to the action and be executed after the action', async () => {
-    const stub = () => steps.push(0)
+    const subscriber = () => steps.push(0)
 
     storeOptions.actions.test = () => new Promise(resolve => {
       setTimeout(() => {
@@ -136,10 +136,34 @@ describe('createStore', () => {
       }, 1000)
     })
 
-    store.subscribeAction('test', { after: stub })
+    store.subscribeAction('test', { after: subscriber })
 
     await store.dispatch('test')
 
     expect(JSON.stringify(steps)).toEqual('[1,0]')
+  })
+
+  it('should unsubscribe from the mutation', () => {
+    const subscriber = () => steps.push(1)
+    const unsubscribe  = store.subscribeMutation('setUser', subscriber)
+
+    store.commit('setUser')
+    expect(JSON.stringify(steps)).toEqual("[1]")
+
+    unsubscribe()
+    store.commit('setUser')
+    expect(JSON.stringify(steps)).toEqual("[1]")
+  })
+
+  it('should unsubscribe from the action', async () => {
+    const subscriber = () => steps.push(1)
+    const unsubscribe  = store.subscribeAction('fetchUser', subscriber)
+
+    await store.dispatch('fetchUser')
+    expect(JSON.stringify(steps)).toEqual("[1]")
+
+    unsubscribe()
+    store.dispatch('fetchUser')
+    expect(JSON.stringify(steps)).toEqual("[1]")
   })
 })
