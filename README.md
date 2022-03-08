@@ -187,7 +187,7 @@ export type User = {
     options: object
 }
 
-export interface IUsersStore extends StoreOptions {
+export interface IUsersStore {
     state: IUsersState
     mutations: IUsersMutations
     actions: IUsersActions
