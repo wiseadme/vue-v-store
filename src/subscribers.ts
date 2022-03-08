@@ -4,7 +4,7 @@ export const useSubscribers = () => {
   const mutationSubs: Subscribers = {}
   const actionSubs: Subscribers = {}
 
-  const prepareSubscription = (
+  const addSubscriber = (
     subs: Subscribers,
     fn: Function | SubscriberOptions,
     type: string
@@ -18,7 +18,7 @@ export const useSubscribers = () => {
   }
 
   const subscribeMutation = (type: string, fn: Function | SubscriberOptions) => {
-    const subscriber = prepareSubscription(mutationSubs, fn, type)
+    const subscriber = addSubscriber(mutationSubs, fn, type)
 
     return () => {
       mutationSubs[type] = mutationSubs[type].filter(
@@ -28,7 +28,7 @@ export const useSubscribers = () => {
   }
 
   const subscribeAction = (type: string, fn: Function | SubscriberOptions) => {
-    const subscriber = prepareSubscription(actionSubs, fn, type)
+    const subscriber = addSubscriber(actionSubs, fn, type)
 
     return () => {
       actionSubs[type] = actionSubs[type].filter(
