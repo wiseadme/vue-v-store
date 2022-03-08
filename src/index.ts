@@ -7,7 +7,7 @@ import { createSubscribers } from './util'
 // Types
 import { Store, StoreOptions, Keys } from './types'
 
-export const createStore = <S extends StoreOptions>(options: S): Store<S> => {
+export const createStore = <S extends StoreOptions<S> = any>(options: S): Store<S> => {
   const state = reactive<S[Keys.state]>(options.state)
   const {
     actionSubs,
@@ -67,7 +67,13 @@ export const createStore = <S extends StoreOptions>(options: S): Store<S> => {
       logError('ERROR[store]: error in before action subscribers')
     }
 
-    const result = await fn({ commit, dispatch, state }, payload)
+    const result = await fn({
+      state,
+      commit,
+      dispatch,
+      subscribeMutation,
+      subscribeAction
+    }, payload)
 
     // notifying all subscribers after the action call
     try {
