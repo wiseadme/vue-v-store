@@ -3,7 +3,7 @@ import { reactive } from 'vue'
 // Helpers
 import { logError, isAsyncFunction, hasAsyncLogic } from './helpers'
 // Subscribers
-import { createSubscribers } from './util'
+import { useSubscribers } from './subscribers'
 // Types
 import { Store, StoreOptions, Keys } from './types'
 
@@ -12,10 +12,10 @@ export const createStore = <S extends StoreOptions<S> = any>(options: S): Store<
   const {
     actionSubs,
     mutationSubs,
-    subscribeMutation,
+    notifySubscribers,
     subscribeAction,
-    notifySubscribers
-  } = createSubscribers()
+    subscribeMutation
+  } = useSubscribers()
 
   const commit = <K extends keyof S[Keys.mutations]>(type: K & string, payload: any) => {
     const fn = options.mutations?.[type]

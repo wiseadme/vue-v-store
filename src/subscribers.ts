@@ -1,6 +1,6 @@
 import { Subscribers, SubscriberOptions } from './types'
 
-export const createSubscribers = () => {
+export const useSubscribers = () => {
   const mutationSubs: Subscribers = {}
   const actionSubs: Subscribers = {}
 
