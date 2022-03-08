@@ -178,7 +178,7 @@ unsubscribe()
 * ```vue-v-store``` is implemented using ```typescript``` and therefore has full typing support:
 
 ```typescript
-import {Store, StoreOptions} from 'vue-v-store'
+import {Store} from 'vue-v-store'
 
 type Maybe<T> = T | null
 
@@ -187,7 +187,7 @@ export type User = {
     options: object
 }
 
-export interface IUsersStore extends StoreOptions {
+export interface IUsersStore {
     state: IUsersState
     mutations: IUsersMutations
     actions: IUsersActions
