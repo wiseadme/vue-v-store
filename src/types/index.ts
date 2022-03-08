@@ -34,7 +34,7 @@ export type SubscriberOptions = {
 }
 
 export type StoreOptions<S extends StoreOptions<S>> = {
-  state: UnwrapNestedRefs<State<S>>
+  state: State<S>
   mutations?: Mutations<S>
   actions?: Actions<S>
 }
