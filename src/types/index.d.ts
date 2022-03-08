@@ -1,6 +1,6 @@
 import { UnwrapNestedRefs } from 'vue'
 
-export declare function createStore<S extends StoreOptions>(options: S): Store<S>
+export declare function createStore<S extends StoreOptions<S>>(options: S): Store<S>
 
 export declare function logError(msg: string): void
 
@@ -16,9 +16,15 @@ export enum Keys {
   actions = 'actions',
 }
 
-export type State = { [key: string]: any }
-export type Mutations = { [key: string]: (state: State, payload: any) => void }
-export type Actions = { [key: string]: (context: Store, payload: any) => void }
+export type State<S extends StoreOptions<S>> = {
+  [key in keyof S[Keys.state]]: S[Keys.state][key]
+}
+export type Mutations<S extends StoreOptions<S>> = {
+  [key in keyof S[Keys.mutations]]: (state: State<S>, payload: any) => void
+}
+export type Actions<S extends StoreOptions<S>> = {
+  [key in keyof S[Keys.actions]]: (context: Store<S>, payload: any) => void
+}
 
 export type Subscribers = { [key: string]: SubscriberOptions[] }
 
@@ -27,20 +33,22 @@ export type SubscriberOptions = {
   after?: Function
 }
 
-export type StoreOptions = {
-  state: State
-  mutations?: Mutations
-  actions?: Actions
+export type StoreOptions<S extends StoreOptions<S>> = {
+  state: UnwrapNestedRefs<State<S>>
+  mutations?: Mutations<S>
+  actions?: Actions<S>
 }
 
-export type Store<S extends StoreOptions> = {
+export type Store<S extends StoreOptions<S>> = {
   state: UnwrapNestedRefs<S[Keys.state]>
-  commit: <K extends keyof S[Keys.mutations]>(type: K, payload: any) => void
-  dispatch: <K extends keyof S[Keys.actions]>(type: K, payload?: any) => Promise<any>
+  commit: <K extends keyof S[Keys.mutations]>(type: K & string, payload: any) => void
+  dispatch: <K extends keyof S[Keys.actions]>(type: K & string, payload?: any) => Promise<any>
   subscribeMutation: <K extends keyof S[Keys.mutations]>(
-    type: K & string, fn: Function | SubscriberOptions
+    type: K & string,
+    fn: Function | SubscriberOptions
   ) => () => void
   subscribeAction: <K extends keyof S[Keys.actions]>(
-    type: K & string, fn: Function | SubscriberOptions
+    type: K & string,
+    fn: Function | SubscriberOptions
   ) => () => void
 }
