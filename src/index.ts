@@ -5,9 +5,9 @@ import { logError, isAsyncFunction, hasAsyncLogic } from './helpers'
 // Subscribers
 import { useSubscribers } from './subscribers'
 // Types
-import { Store, StoreOptions, Keys } from './types'
+import { StoreOptions, Keys } from './types'
 
-export const createStore = <S extends StoreOptions<S> = any>(options: S): Store<S> => {
+export const createStore = <S extends StoreOptions<S>>(options: S) => {
   const state = reactive<S[Keys.state]>(options.state)
   const {
     actionSubs,
@@ -17,7 +17,7 @@ export const createStore = <S extends StoreOptions<S> = any>(options: S): Store<
     subscribeMutation
   } = useSubscribers()
 
-  const commit = <K extends keyof S[Keys.mutations]>(type: K & string, payload: any) => {
+  const commit = <K extends keyof S[Keys.mutations]>(type: K, payload: any) => {
     const fn = options.mutations?.[type]
 
     if (!fn) {
@@ -36,7 +36,7 @@ export const createStore = <S extends StoreOptions<S> = any>(options: S): Store<
     }
     // notifying all subscribers before the mutation call
     try {
-      notifySubscribers(type, mutationSubs)
+      notifySubscribers(type as string, mutationSubs)
     } catch (err) {
       logError('ERROR[store]: error in before mutation subscribers')
     }
@@ -44,14 +44,14 @@ export const createStore = <S extends StoreOptions<S> = any>(options: S): Store<
     fn(state, payload)
     // notifying all subscribers after the mutation call
     try {
-      notifySubscribers(type, mutationSubs, true)
+      notifySubscribers(type as string, mutationSubs, true)
     } catch (err) {
       logError('ERROR[store]: error in before mutation subscribers')
     }
   }
 
   const dispatch = async <K extends keyof S[Keys.actions]>(
-    type: K & string,
+    type: K,
     payload?: any
   ) => {
     const fn = options.actions?.[type]
@@ -62,7 +62,7 @@ export const createStore = <S extends StoreOptions<S> = any>(options: S): Store<
 
     // notifying all subscribers before the action call
     try {
-      notifySubscribers(type, actionSubs)
+      notifySubscribers(type as string, actionSubs)
     } catch (err) {
       logError('ERROR[store]: error in before action subscribers')
     }
@@ -77,7 +77,7 @@ export const createStore = <S extends StoreOptions<S> = any>(options: S): Store<
 
     // notifying all subscribers after the action call
     try {
-      notifySubscribers(type, actionSubs, true)
+      notifySubscribers(type as string, actionSubs, true)
     } catch (err) {
       logError('ERROR[store]: error in after action subscribers')
     }

@@ -6,7 +6,7 @@ const nodeExternals = require('webpack-node-externals')
 
 const buildConfig = (env = {}) => merge(baseConfig(env), {
   entry: {
-    index: path.resolve(__dirname, '../src/index.ts')
+    index: path.resolve(__dirname, '../src/index.d.ts')
   },
   output: {
     filename: `[name].js`,

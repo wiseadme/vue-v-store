@@ -16,37 +16,30 @@ export enum Keys {
   actions = 'actions',
 }
 
-export type State<S extends StoreOptions<S>> = {
-  [key in keyof S[Keys.state]]: S[Keys.state][key]
+export type State<S> = {
+  [key in keyof S]: S[key]
 }
-export type Mutations<S extends StoreOptions<S>> = {
-  [key in keyof S[Keys.mutations]]: (state: State<S>, payload: any) => void
+export type Mutations<S, M> = {
+  [key in keyof M]: (state: S, payload: any) => void
 }
-export type Actions<S extends StoreOptions<S>> = {
-  [key in keyof S[Keys.actions]]: (context: Store<S>, payload: any) => void
-}
-
-export type Subscribers = { [key: string]: SubscriberOptions[] }
-
-export type SubscriberOptions = {
-  before?: Function
-  after?: Function
+export type Actions<S, A> = {
+  [key in keyof A]: (context: Store<S>, payload: any) => any
 }
 
-export type StoreOptions<S> = {
-  state: State<S>
-  mutations?: Mutations<S>
-  actions?: Actions<S>
+export type StoreOptions<S extends Partial<Record<Keys, any>>> = {
+  state: State<S[Keys.state]>
+  mutations?: Mutations<S[Keys.state], S[Keys.mutations]>
+  actions?: Actions<S, S[Keys.actions]>
 }
 
-export type Store<S extends StoreOptions<S>> = {
+export type Store<S extends Partial<Record<Keys, any>>> = {
   state: UnwrapNestedRefs<S[Keys.state]>
   commit: <K extends keyof S[Keys.mutations]>(
-    type: K & string,
+    type: K,
     payload: any
   ) => void
   dispatch: <K extends keyof S[Keys.actions]>(
-    type: K & string,
+    type: K,
     payload?: any
   ) => Promise<any>
   subscribeMutation: <K extends keyof S[Keys.mutations]>(
@@ -57,4 +50,11 @@ export type Store<S extends StoreOptions<S>> = {
     type: K & string,
     fn: Function | SubscriberOptions
   ) => () => void
+}
+
+export type Subscribers = { [key: string]: SubscriberOptions[] }
+
+export type SubscriberOptions = {
+  before?: Function
+  after?: Function
 }
