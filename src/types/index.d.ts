@@ -1,30 +1,20 @@
 import { UnwrapNestedRefs } from 'vue'
 
-export declare function createStore<S extends StoreOptions<S>>(options: S): Store<S>
-
-export declare function logError(msg: string): void
-
-export declare function logWarn(msg: string): void
-
-export declare function isAsyncFunction(fn: Function): boolean
-
-export declare function hasAsyncLogic(fn: Function): boolean
-
 export enum Keys {
   state = 'state',
   mutations = 'mutations',
   actions = 'actions',
 }
 
-export type State<S> = {
-  [key in keyof S]: S[key]
-}
-export type Mutations<S, M> = {
-  [key in keyof M]: (state: S, payload: any) => void
-}
-export type Actions<S, A> = {
-  [key in keyof A]: (context: Store<S>, payload: any) => any
-}
+export declare function createStore<S extends StoreOptions<S>>(options: S): Store<S>
+export declare function logError(msg: string): void
+export declare function logWarn(msg: string): void
+export declare function isAsyncFunction(fn: Function): boolean
+export declare function hasAsyncLogic(fn: Function): boolean
+
+export type State<S> = { [key in keyof S]: S[key] }
+export type Mutations<S, M> = { [key in keyof M]: (state: S, payload: any) => void }
+export type Actions<S, A> = { [key in keyof A]: (context: Store<S>, payload: any) => any }
 
 export type StoreOptions<S extends Partial<Record<Keys, any>>> = {
   state: State<S[Keys.state]>
@@ -32,7 +22,7 @@ export type StoreOptions<S extends Partial<Record<Keys, any>>> = {
   actions?: Actions<S, S[Keys.actions]>
 }
 
-export type Store<S extends Partial<Record<Keys, any>>> = {
+export type Store<S extends StoreOptions<S>> = {
   state: UnwrapNestedRefs<S[Keys.state]>
   commit: <K extends keyof S[Keys.mutations]>(
     type: K,

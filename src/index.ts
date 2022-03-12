@@ -15,7 +15,7 @@ export const createStore = <S extends StoreOptions<S>>(options: S) => {
     notifySubscribers,
     subscribeAction,
     subscribeMutation
-  } = useSubscribers()
+  } = useSubscribers<S>()
 
   const commit = <K extends keyof S[Keys.mutations]>(type: K, payload: any) => {
     const fn = options.mutations?.[type]
@@ -24,11 +24,11 @@ export const createStore = <S extends StoreOptions<S>>(options: S) => {
       return logError(`ERROR[store]: unknown mutation type: ${ type }`)
     }
 
-    if (isAsyncFunction(fn!)) {
+    if (isAsyncFunction(fn)) {
       return logError('ERROR[store]: mutation can only be a synchronous function')
     }
 
-    if (hasAsyncLogic(fn!)) {
+    if (hasAsyncLogic(fn)) {
       return logError(
         'ERROR[store]: asynchronous logic, including timers ' +
         'and promises, cannot be used in mutations'

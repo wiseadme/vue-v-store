@@ -1,6 +1,6 @@
-import { Subscribers, SubscriberOptions } from './types'
+import { Subscribers, SubscriberOptions, Keys, StoreOptions } from './types'
 
-export const useSubscribers = () => {
+export const useSubscribers = <S extends StoreOptions<S>>() => {
   const mutationSubs: Subscribers = {}
   const actionSubs: Subscribers = {}
 
@@ -17,7 +17,10 @@ export const useSubscribers = () => {
     return sub
   }
 
-  const subscribeMutation = (type: string, fn: Function | SubscriberOptions) => {
+  const subscribeMutation = <K extends keyof S[Keys.mutations] & string>(
+    type: K,
+    fn: Function | SubscriberOptions
+  ) => {
     const subscriber = addSubscriber(mutationSubs, fn, type)
 
     return () => {
@@ -27,7 +30,10 @@ export const useSubscribers = () => {
     }
   }
 
-  const subscribeAction = (type: string, fn: Function | SubscriberOptions) => {
+  const subscribeAction = <K extends keyof S[Keys.actions] & string>(
+    type: K,
+    fn: Function | SubscriberOptions
+  ) => {
     const subscriber = addSubscriber(actionSubs, fn, type)
 
     return () => {
