@@ -33,7 +33,7 @@ export type SubscriberOptions = {
   after?: Function
 }
 
-export type StoreOptions<S extends StoreOptions<S>> = {
+export type StoreOptions<S> = {
   state: State<S>
   mutations?: Mutations<S>
   actions?: Actions<S>
@@ -41,8 +41,14 @@ export type StoreOptions<S extends StoreOptions<S>> = {
 
 export type Store<S extends StoreOptions<S>> = {
   state: UnwrapNestedRefs<S[Keys.state]>
-  commit: <K extends keyof S[Keys.mutations]>(type: K & string, payload: any) => void
-  dispatch: <K extends keyof S[Keys.actions]>(type: K & string, payload?: any) => Promise<any>
+  commit: <K extends keyof S[Keys.mutations]>(
+    type: K & string,
+    payload: any
+  ) => void
+  dispatch: <K extends keyof S[Keys.actions]>(
+    type: K & string,
+    payload?: any
+  ) => Promise<any>
   subscribeMutation: <K extends keyof S[Keys.mutations]>(
     type: K & string,
     fn: Function | SubscriberOptions
