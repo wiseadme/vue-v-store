@@ -1,6 +1,6 @@
 {
   "name": "vue-v-store",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "Minimalistic and lightweight Vue 3 composition API-compatible store pattern plugin",
   "sideEffects": false,
   "main": "dist/index.js",
