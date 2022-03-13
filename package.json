@@ -26,8 +26,11 @@
   },
   "keywords": [
     "vue",
+    "vue state",
+    "vue store",
     "vue-store",
     "store",
+    "state manager",
     "composition api"
   ],
   "author": {
@@ -48,7 +51,6 @@
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^10.2.4",
     "cross-env": "^7.0.3",
-    "css-loader": "^6.6.0",
     "editorconfig-checker": "^4.0.2",
     "eslint": "^7.32.0",
     "eslint-loader": "^4.0.2",
@@ -56,11 +58,7 @@
     "html-webpack-plugin": "^5.5.0",
     "husky": "^7.0.0",
     "jest": "^27.5.1",
-    "mini-css-extract-plugin": "^2.5.3",
-    "postcss-loader": "^6.2.1",
-    "postcss-preset-env": "^7.4.1",
     "regenerator-runtime": "^0.13.9",
-    "style-loader": "^3.3.1",
     "terser-webpack-plugin": "^5.3.1",
     "ts-jest": "^27.1.3",
     "ts-loader": "^9.2.6",

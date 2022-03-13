@@ -72,19 +72,6 @@ module.exports = (env = {}) => {
           exclude: /node_modules/,
           use: ['vue-loader'],
         },
-        {
-          test: /\.(css|scss)$/,
-          use: [
-            {
-              loader: 'css-loader',
-              options: { sourceMap: true },
-            },
-            {
-              loader: 'postcss-loader',
-              options: { sourceMap: true },
-            },
-          ],
-        },
       ]
     },
     resolve: {
