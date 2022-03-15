@@ -33,16 +33,18 @@ export type Store<S extends StoreOptions<S>> = {
     payload?: any
   ) => Promise<any>
   subscribeMutation: <K extends keyof S[Keys.mutations]>(
-    type: K & string,
+    type: K,
     fn: Function | SubscriberOptions
   ) => () => void
   subscribeAction: <K extends keyof S[Keys.actions]>(
-    type: K & string,
+    type: K,
     fn: Function | SubscriberOptions
   ) => () => void
 }
 
-export type Subscribers = { [key: string]: SubscriberOptions[] }
+export type MutationSubscribers<S> = { [K in keyof S[Keys.mutations]]: SubscriberOptions[] }
+export type ActionSubscribers<S> = { [K in keyof S[Keys.actions]]: SubscriberOptions[] }
+export type Subscribers<S> = MutationSubscribers<S> | ActionSubscribers<S>
 
 export type SubscriberOptions = {
   before?: Function

@@ -1,13 +1,20 @@
-import { Subscribers, SubscriberOptions, Keys, StoreOptions } from './types'
+import {
+  MutationSubscribers,
+  ActionSubscribers,
+  Subscribers,
+  SubscriberOptions,
+  Keys,
+  StoreOptions
+} from './types'
 
 export const useSubscribers = <S extends StoreOptions<S>>() => {
-  const mutationSubs: Subscribers = {}
-  const actionSubs: Subscribers = {}
+  const mutationSubs = {} as MutationSubscribers<S>
+  const actionSubs = {} as ActionSubscribers<S>
 
   const addSubscriber = (
-    subs: Subscribers,
+    subs: Subscribers<S>,
     fn: Function | SubscriberOptions,
-    type: string
+    type: string | number | symbol
   ) => {
     if (!subs[type]) subs[type] = []
 
@@ -17,7 +24,7 @@ export const useSubscribers = <S extends StoreOptions<S>>() => {
     return sub
   }
 
-  const subscribeMutation = <K extends keyof S[Keys.mutations] & string>(
+  const subscribeMutation = <K extends keyof S[Keys.mutations]>(
     type: K,
     fn: Function | SubscriberOptions
   ) => {
@@ -30,7 +37,7 @@ export const useSubscribers = <S extends StoreOptions<S>>() => {
     }
   }
 
-  const subscribeAction = <K extends keyof S[Keys.actions] & string>(
+  const subscribeAction = <K extends keyof S[Keys.actions]>(
     type: K,
     fn: Function | SubscriberOptions
   ) => {
@@ -43,7 +50,7 @@ export const useSubscribers = <S extends StoreOptions<S>>() => {
     }
   }
 
-  const notifySubscribers = (type: string, subs: Subscribers, isAfter = false) => {
+  const notifySubscribers = (type: string, subs: Subscribers<S>, isAfter = false) => {
     const subsType = isAfter ? 'after' : 'before'
 
     subs[type]
