@@ -5,7 +5,7 @@ import { logError, isAsyncFunction, hasAsyncLogic } from './helpers'
 // Subscribers
 import { useSubscribers } from './subscribers'
 // Types
-import { StoreOptions, Keys } from './types'
+import { Keys, StoreOptions } from './types'
 
 export const createStore = <S extends StoreOptions<S>>(options: S) => {
   const state = reactive<S[Keys.state]>(options.state)

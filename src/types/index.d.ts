@@ -22,7 +22,7 @@ export type StoreOptions<S extends Partial<Record<Keys, any>>> = {
   actions?: Actions<S, S[Keys.actions]>
 }
 
-export type Store<S extends StoreOptions<S>> = {
+export type Store<S extends Partial<Record<Keys, any>>> = {
   state: UnwrapNestedRefs<S[Keys.state]>
   commit: <K extends keyof S[Keys.mutations]>(
     type: K,
@@ -33,16 +33,23 @@ export type Store<S extends StoreOptions<S>> = {
     payload?: any
   ) => Promise<any>
   subscribeMutation: <K extends keyof S[Keys.mutations]>(
-    type: K & string,
+    type: K,
     fn: Function | SubscriberOptions
   ) => () => void
   subscribeAction: <K extends keyof S[Keys.actions]>(
-    type: K & string,
+    type: K,
     fn: Function | SubscriberOptions
   ) => () => void
 }
 
-export type Subscribers = { [key: string]: SubscriberOptions[] }
+export type MutationSubscribers<S extends StoreOptions<S>> = {
+  [K in keyof S[Keys.mutations]]: SubscriberOptions[]
+}
+export type ActionSubscribers<S extends StoreOptions<S>> = {
+  [K in keyof S[Keys.actions]]: SubscriberOptions[]
+}
+
+export type Subscribers<S extends StoreOptions<S>> = MutationSubscribers<S> | ActionSubscribers<S>
 
 export type SubscriberOptions = {
   before?: Function
