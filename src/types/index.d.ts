@@ -7,6 +7,7 @@ export enum Keys {
 }
 
 export declare function createStore<S extends StoreOptions<S>>(options: S): Store<S>
+// export declare function createStore<S extends StoreOptions<any>>(options: S): Store<S>
 export declare function logError(msg: string): void
 export declare function logWarn(msg: string): void
 export declare function isAsyncFunction(fn: Function): boolean
@@ -50,6 +51,7 @@ export type ActionSubscribers<S extends StoreOptions<S>> = {
 }
 
 export type Subscribers<S extends StoreOptions<S>> = MutationSubscribers<S> | ActionSubscribers<S>
+export type Options<T> = T extends unknown ? Record<Keys, any> : T
 
 export type SubscriberOptions = {
   before?: Function
