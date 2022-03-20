@@ -1,6 +1,6 @@
 {
   "name": "vue-v-store",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Minimalistic and lightweight Vue 3 composition API-compatible store pattern plugin",
   "sideEffects": false,
   "main": "dist/index.js",
@@ -26,12 +26,18 @@
   },
   "keywords": [
     "vue",
-    "vue state",
-    "vue store",
-    "vue-store",
+    "vuex",
     "store",
-    "state manager",
-    "composition api"
+    "vue-v-store",
+    "vue v store",
+    "vue store",
+    "composition",
+    "api",
+    "setup",
+    "state",
+    "typescript",
+    "ts",
+    "type"
   ],
   "author": {
     "name": "Anar Allakhverdiev",

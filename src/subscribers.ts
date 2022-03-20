@@ -3,10 +3,11 @@ import {
   ActionSubscribers,
   Subscribers,
   SubscriberOptions,
-  Keys, StoreOptions
+  Keys,
+  Pattern
 } from './types'
 
-export const useSubscribers = <S extends StoreOptions<S>>() => {
+export const useSubscribers = <S extends Pattern<S>>() => {
   const mutationSubs = {} as MutationSubscribers<S>
   const actionSubs = {} as ActionSubscribers<S>
 

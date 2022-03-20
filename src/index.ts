@@ -5,9 +5,9 @@ import { logError, isAsyncFunction, hasAsyncLogic } from './helpers'
 // Subscribers
 import { useSubscribers } from './subscribers'
 // Types
-import { Keys, StoreOptions } from './types'
+import { Store, Keys, Options, Pattern } from './types'
 
-export const createStore = <S extends StoreOptions<S>>(options: S) => {
+export const createStore = <S extends Options<Pattern<S>>>(options: S): Store<S> => {
   const state = reactive<S[Keys.state]>(options.state)
   const {
     actionSubs,

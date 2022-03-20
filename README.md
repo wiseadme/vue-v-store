@@ -198,7 +198,7 @@ export interface IUsersState {
 }
 
 export interface IUsersMutations {
-    setUsers: (state: IUsersState, users: Users[]) => void
+    setUsers: (state: IUsersState, users: User[]) => void
     setUsersUrl: (state: IUsersState, url: string) => void
 }
 
