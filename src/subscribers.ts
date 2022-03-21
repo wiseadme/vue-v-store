@@ -14,7 +14,7 @@ export const useSubscribers = <S extends Pattern<S>>() => {
   const addSubscriber = (
     subs: Subscribers<S>,
     fn: Function | SubscriberOptions,
-    type: keyof Subscribers<S>
+    type: keyof Subscribers<S>,
   ): SubscriberOptions => {
     if (!subs[type]) subs[type] = []
 
@@ -39,7 +39,7 @@ export const useSubscribers = <S extends Pattern<S>>() => {
 
   const subscribeAction = <K extends keyof S[Keys.actions]>(
     type: K,
-    fn: Function | SubscriberOptions
+    fn: Function | SubscriberOptions,
   ) => {
     const subscriber = addSubscriber(actionSubs, fn, type as keyof Subscribers<S>)
 
@@ -50,13 +50,35 @@ export const useSubscribers = <S extends Pattern<S>>() => {
     }
   }
 
-  const notifySubscribers = (type: string, subs: Subscribers<S>, isAfter = false) => {
-    const subsType = isAfter ? 'after' : 'before'
+  const genNotifier = (
+    type: string,
+    subs: Subscribers<S>,
+    isAsync = false
+  ) => {
+    if (isAsync) {
+      return (key) => {
+        // 'before' or 'after' effects
+        const effects = subs[type]?.slice().filter((sub) => sub[key])
+        // array for pushing
+        // of async function calls
+        const promises = [] as Promise<any>[]
 
-    subs[type]
-      ?.slice()
-      .filter((sub) => sub[subsType])
-      .forEach((sub) => sub[subsType]?.())
+        if (effects && effects.length) {
+          for (let sub of effects) {
+            // if "wait" is equal true
+            // add it effect call
+            // in to promises array
+            sub.wait ? promises.push(sub[key]()) : sub[key]()
+          }
+        }
+
+        return promises.length ? Promise.all(promises) : null
+      }
+    }
+
+    return (key) => {
+      subs[type]?.slice().filter((sub) => sub[key]).forEach(sub => sub[key]())
+    }
   }
 
   return {
@@ -64,6 +86,6 @@ export const useSubscribers = <S extends Pattern<S>>() => {
     mutationSubs,
     subscribeMutation,
     subscribeAction,
-    notifySubscribers
+    genNotifier
   }
 }

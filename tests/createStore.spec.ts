@@ -66,8 +66,8 @@ describe('createStore', () => {
     expect(stub).toHaveBeenCalled()
   })
 
-  it('should change "state" of the store from the action without calling a mutation', () => {
-    store.dispatch('mutateStateFromAction', user)
+  it('should change "state" of the store from the action without calling a mutation', async () => {
+    await store.dispatch('mutateStateFromAction', user)
     expect(store.state.user.name).toEqual(user.name)
   })
 
@@ -89,14 +89,14 @@ describe('createStore', () => {
     const spy = jest.spyOn(console, 'error')
     store.commit('notExist')
 
-    expect(spy).toBeCalledWith('ERROR[store]: unknown mutation type: notExist')
+    expect(spy).toBeCalledWith('ERROR[vue-v-store]: unknown mutation type: notExist')
   })
 
   it('should out the error message if action type does not exist', () => {
     const spy = jest.spyOn(console, 'error')
     store.dispatch('notExist')
 
-    expect(spy).toBeCalledWith('ERROR[store]: unknown action type: notExist')
+    expect(spy).toBeCalledWith('ERROR[vue-v-store]: unknown action type: notExist')
   })
 
   it('should subscribe to the mutation and be executed before the mutation', () => {
@@ -117,11 +117,12 @@ describe('createStore', () => {
     expect(JSON.stringify(steps)).toEqual('[1,0]')
   })
 
-  it('should subscribe to the action and be executed before the action', () => {
+  it('should subscribe to the action and be executed before the action', async () => {
     const subscriber = () => steps.push(0)
     storeOptions.actions.test = () => steps.push(1)
     store.subscribeAction('test', { before: subscriber })
-    store.dispatch('test')
+
+    await store.dispatch('test')
 
     expect(JSON.stringify(steps)).toEqual('[0,1]')
   })

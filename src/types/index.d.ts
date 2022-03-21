@@ -48,11 +48,11 @@ export type MutationSubscribers<S extends Pattern<S>> = {
 export type ActionSubscribers<S extends Pattern<S>> = {
   [K in keyof S[Keys.actions]]: SubscriberOptions[]
 }
-
 export type Subscribers<S extends Pattern<S>> = MutationSubscribers<S> | ActionSubscribers<S>
 export type Options<T> = T extends unknown ? Record<Keys, any> : T
 
 export type SubscriberOptions = {
   before?: Function
-  after?: Function
+  after?: Function,
+  wait?: boolean
 }

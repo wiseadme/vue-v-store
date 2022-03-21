@@ -12,7 +12,7 @@ export const createStore = <S extends Options<Pattern<S>>>(options: S): Store<S>
   const {
     actionSubs,
     mutationSubs,
-    notifySubscribers,
+    genNotifier,
     subscribeAction,
     subscribeMutation
   } = useSubscribers<S>()
@@ -20,33 +20,35 @@ export const createStore = <S extends Options<Pattern<S>>>(options: S): Store<S>
   const commit = <K extends keyof S[Keys.mutations]>(type: K, payload: any) => {
     const fn = options.mutations?.[type]
 
+    const notify = genNotifier(type as string, mutationSubs)
+
     if (!fn) {
-      return logError(`ERROR[store]: unknown mutation type: ${ type }`)
+      return logError(`ERROR[vue-v-store]: unknown mutation type: ${ type }`)
     }
 
     if (isAsyncFunction(fn)) {
-      return logError('ERROR[store]: mutation can only be a synchronous function')
+      return logError('ERROR[vue-v-store]: mutation can only be a synchronous function')
     }
 
     if (hasAsyncLogic(fn)) {
       return logError(
-        'ERROR[store]: asynchronous logic, including timers ' +
+        'ERROR[vue-v-store]: asynchronous logic, including timers ' +
         'and promises, cannot be used in mutations'
       )
     }
     // notifying all subscribers before the mutation call
     try {
-      notifySubscribers(type as string, mutationSubs)
+      notify('before')
     } catch (err) {
-      logError('ERROR[store]: error in before mutation subscribers')
+      logError('ERROR[vue-v-store]: error in before mutation subscribers')
     }
 
     fn(state, payload)
     // notifying all subscribers after the mutation call
     try {
-      notifySubscribers(type as string, mutationSubs, true)
+      notify('after')
     } catch (err) {
-      logError('ERROR[store]: error in before mutation subscribers')
+      logError('ERROR[vue-v-store]: error in before mutation subscribers')
     }
   }
 
@@ -56,15 +58,18 @@ export const createStore = <S extends Options<Pattern<S>>>(options: S): Store<S>
   ) => {
     const fn = options.actions?.[type]
 
+    const notifyAsync = genNotifier(type as string, actionSubs, true)
+
     if (!fn) {
-      return logError(`ERROR[store]: unknown action type: ${ type }`)
+      return logError(`ERROR[vue-v-store]: unknown action type: ${ type }`)
     }
 
     // notifying all subscribers before the action call
     try {
-      notifySubscribers(type as string, actionSubs)
+      await notifyAsync('before')
     } catch (err) {
-      logError('ERROR[store]: error in before action subscribers')
+      logError('ERROR[vue-v-store]: error in before action subscribers')
+      return Promise.reject(err)
     }
 
     const result = await fn({
@@ -77,9 +82,9 @@ export const createStore = <S extends Options<Pattern<S>>>(options: S): Store<S>
 
     // notifying all subscribers after the action call
     try {
-      notifySubscribers(type as string, actionSubs, true)
+      await notifyAsync('after')
     } catch (err) {
-      logError('ERROR[store]: error in after action subscribers')
+      logError('ERROR[vue-v-store]: error in after action subscribers')
     }
 
     return result
