@@ -1,10 +1,11 @@
 import {
+  Keys,
+  Pattern,
+  Subscribers,
   MutationSubscribers,
   ActionSubscribers,
-  Subscribers,
   SubscriberOptions,
-  Keys,
-  Pattern, BeforeEffectOptions
+  BeforeEffectOptions
 } from './types'
 
 export const useSubscribers = <S extends Pattern<S>>() => {
@@ -63,7 +64,7 @@ export const useSubscribers = <S extends Pattern<S>>() => {
         const promises = [] as Promise<any>[]
 
         if (effects && effects.length) {
-          for (let sub of effects) {
+          for (const sub of effects) {
             // if "wait" is equal true
             // then we add the call of its "before" effect
             // to the array of promises
