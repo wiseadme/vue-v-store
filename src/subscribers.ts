@@ -4,7 +4,7 @@ import {
   Subscribers,
   SubscriberOptions,
   Keys,
-  Pattern
+  Pattern, BeforeEffectOptions
 } from './types'
 
 export const useSubscribers = <S extends Pattern<S>>() => {
@@ -50,25 +50,28 @@ export const useSubscribers = <S extends Pattern<S>>() => {
     }
   }
 
-  const genNotifier = (
-    type: string,
+  const genNotifier = <K extends keyof Subscribers<S>>(
+    type: K,
     subs: Subscribers<S>,
     isAsync = false
   ) => {
     if (isAsync) {
       return (key) => {
-        // 'before' or 'after' effects
+        // 'before' or 'after' effects array
         const effects = subs[type]?.slice().filter((sub) => sub[key])
-        // array for pushing
-        // of async function calls
+        // array of async function calls
         const promises = [] as Promise<any>[]
 
         if (effects && effects.length) {
-          for (let sub of effects) {
+          for (const sub of effects) {
             // if "wait" is equal true
-            // add it effect call
-            // in to promises array
-            sub.wait ? promises.push(sub[key]()) : sub[key]()
+            // then we add the call of its "before" effect
+            // to the array of promises
+            if (sub.before && (sub.before as BeforeEffectOptions).wait) {
+              promises.push(sub[key].wait())
+            } else {
+              sub[key]()
+            }
           }
         }
 
