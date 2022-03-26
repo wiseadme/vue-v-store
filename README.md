@@ -76,9 +76,9 @@ export const useUsersStore = () => store
 </script>
 <template>
   <div class="page">
-        <span v-if="$store.state.users">
-            users count: {{ $store.state.users.length }}
-        </span>
+    <span v-if="$store.state.users">
+      users count: {{ $store.state.users.length }}
+    </span>
   </div>
   <button @click="getUsers">
     FETCH USERS
