@@ -66,8 +66,8 @@ describe('createStore', () => {
     expect(stub).toHaveBeenCalled()
   })
 
-  it('should change "state" of the store from the action without calling a mutation', () => {
-    store.dispatch('mutateStateFromAction', user)
+  it('should change "state" of the store from the action without calling a mutation', async () => {
+    await store.dispatch('mutateStateFromAction', user)
     expect(store.state.user.name).toEqual(user.name)
   })
 
@@ -89,14 +89,14 @@ describe('createStore', () => {
     const spy = jest.spyOn(console, 'error')
     store.commit('notExist')
 
-    expect(spy).toBeCalledWith('ERROR[store]: unknown mutation type: notExist')
+    expect(spy).toBeCalledWith('ERROR[vue-v-store]: unknown mutation type: notExist')
   })
 
   it('should out the error message if action type does not exist', () => {
     const spy = jest.spyOn(console, 'error')
     store.dispatch('notExist')
 
-    expect(spy).toBeCalledWith('ERROR[store]: unknown action type: notExist')
+    expect(spy).toBeCalledWith('ERROR[vue-v-store]: unknown action type: notExist')
   })
 
   it('should subscribe to the mutation and be executed before the mutation', () => {
@@ -117,11 +117,25 @@ describe('createStore', () => {
     expect(JSON.stringify(steps)).toEqual('[1,0]')
   })
 
-  it('should subscribe to the action and be executed before the action', () => {
+  it('should subscribe to the action and be executed before the action', async () => {
     const subscriber = () => steps.push(0)
     storeOptions.actions.test = () => steps.push(1)
     store.subscribeAction('test', { before: subscriber })
-    store.dispatch('test')
+
+    await store.dispatch('test')
+
+    expect(JSON.stringify(steps)).toEqual('[0,1]')
+  })
+
+  it('should "wait" for the subscriber execution result to return before dispatching', async () => {
+    const subscriber = () => new Promise(resolve => setTimeout(() => {
+      steps.push(0)
+      resolve(true)
+    }, 500))
+    storeOptions.actions.test = () => steps.push(1)
+    store.subscribeAction('test', { before: { wait: subscriber }, wait: true })
+
+    await store.dispatch('test')
 
     expect(JSON.stringify(steps)).toEqual('[0,1]')
   })
@@ -145,25 +159,25 @@ describe('createStore', () => {
 
   it('should unsubscribe from the mutation', () => {
     const subscriber = () => steps.push(1)
-    const unsubscribe  = store.subscribeMutation('setUser', subscriber)
+    const unsubscribe = store.subscribeMutation('setUser', subscriber)
 
     store.commit('setUser')
-    expect(JSON.stringify(steps)).toEqual("[1]")
+    expect(JSON.stringify(steps)).toEqual('[1]')
 
     unsubscribe()
     store.commit('setUser')
-    expect(JSON.stringify(steps)).toEqual("[1]")
+    expect(JSON.stringify(steps)).toEqual('[1]')
   })
 
   it('should unsubscribe from the action', async () => {
     const subscriber = () => steps.push(1)
-    const unsubscribe  = store.subscribeAction('fetchUser', subscriber)
+    const unsubscribe = store.subscribeAction('fetchUser', subscriber)
 
     await store.dispatch('fetchUser')
-    expect(JSON.stringify(steps)).toEqual("[1]")
+    expect(JSON.stringify(steps)).toEqual('[1]')
 
     unsubscribe()
     store.dispatch('fetchUser')
-    expect(JSON.stringify(steps)).toEqual("[1]")
+    expect(JSON.stringify(steps)).toEqual('[1]')
   })
 })
