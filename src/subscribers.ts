@@ -55,9 +55,9 @@ export const useSubscribers = <S extends Pattern<S>>() => {
     type: K,
     subs: Subscribers<S>,
     isAsync = false
-  ) => {
+  ): Function => {
     if (isAsync) {
-      return (key) => {
+      return async (key): Promise<any> => {
         // 'before' or 'after' effects array
         const effects = subs[type]?.slice().filter((sub) => sub[key])
         // array of async function calls
@@ -76,7 +76,11 @@ export const useSubscribers = <S extends Pattern<S>>() => {
           }
         }
 
-        return promises.length ? Promise.all(promises) : null
+        try {
+          await Promise.all(promises)
+        } catch (err) {
+          return Promise.reject(err)
+        }
       }
     }
 

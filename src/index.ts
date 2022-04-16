@@ -41,6 +41,7 @@ export const createStore = <S extends Options<Pattern<S>>>(options: S): Store<S>
       notify('before')
     } catch (err) {
       logError('ERROR[vue-v-store]: error in before mutation subscribers')
+      logError(err as Error)
     }
 
     fn(state, payload)
@@ -49,6 +50,7 @@ export const createStore = <S extends Options<Pattern<S>>>(options: S): Store<S>
       notify('after')
     } catch (err) {
       logError('ERROR[vue-v-store]: error in before mutation subscribers')
+      logError(err as Error)
     }
   }
 
@@ -69,7 +71,7 @@ export const createStore = <S extends Options<Pattern<S>>>(options: S): Store<S>
       await notifyAsync('before')
     } catch (err) {
       logError('ERROR[vue-v-store]: error in before action subscribers')
-      return Promise.reject(err)
+      logError(err as Error)
     }
 
     const result = await fn({
@@ -85,6 +87,7 @@ export const createStore = <S extends Options<Pattern<S>>>(options: S): Store<S>
       await notifyAsync('after')
     } catch (err) {
       logError('ERROR[vue-v-store]: error in after action subscribers')
+      logError(err as Error)
     }
 
     return result
