@@ -44,6 +44,8 @@ describe('createStore', () => {
     expect(store.state).toBeTruthy()
     expect(store.dispatch).toBeTruthy()
     expect(store.commit).toBeTruthy()
+    expect(store.subscribeAction).toBeTruthy()
+    expect(store.subscribeMutation).toBeTruthy()
   })
 
   it('should test execution of the "commit" inside the action', async () => {
