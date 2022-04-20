@@ -44,6 +44,7 @@ export type Store<S extends Partial<Record<Keys, any>>> = {
     type: K,
     fn: Function | SubscriberOptions
   ) => () => void
+  wrap: (...args: any) => any
 }
 
 export type MutationSubscribers<S extends Pattern<S>> = {

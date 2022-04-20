@@ -1,5 +1,5 @@
 // Vue API
-import { reactive } from 'vue'
+import { reactive, defineComponent, h, getCurrentInstance } from 'vue'
 // Helpers
 import { logError, isAsyncFunction, hasAsyncLogic } from './helpers'
 // Subscribers
@@ -93,8 +93,55 @@ export const createStore = <S extends Options<Pattern<S>>>(options: S): Store<S>
     return result
   }
 
+  const wrap = (cmp) => {
+    const propsData = {}
+
+    Object.keys(options.mutations).forEach(key => {
+      propsData[`onMutation:${ key }`] = $payload => commit(key, $payload)
+    })
+
+    Object.keys(options.actions).forEach(key => {
+      propsData[`onAction:${ key }`] = $payload => dispatch(key, $payload)
+    })
+
+    console.log(cmp)
+
+    return defineComponent({
+      setup(){
+        const inst: any = getCurrentInstance()
+        //
+        const oldEmit = inst.emit
+
+        inst.emit = (event, payload) => new Promise(res => {
+          console.log(event, payload)
+          oldEmit(event, payload)
+          res(true)
+        })
+
+        // const { emit, attrs, slots, expose } = ctx
+
+        // const newCtx = {
+        //   attrs,
+        //   slots,
+        //   expose,
+        //   isTrusted: true,
+        //   emit: (event, payload) => new Promise(res => {
+        //     emit(event, payload)
+        //     res(true)
+        //   })
+        // }
+
+        const { setup } = cmp
+        cmp.setup = setup.bind(cmp, cmp.props, inst)
+
+        return () => h(cmp, propsData)
+      }
+    })
+  }
+
   return {
     state,
+    wrap,
     commit,
     dispatch,
     subscribeAction,
