@@ -20,7 +20,7 @@ export const createStore = <S extends Options<Pattern<S>>>(options: S): Store<S>
   const commit = <K extends keyof S[Keys.mutations]>(type: K, payload: any) => {
     const fn = options.mutations?.[type]
 
-    const notify = genNotifier(type, mutationSubs)
+    const notify = genNotifier(type as string, mutationSubs)
 
     if (!fn) {
       return logError(`ERROR[vue-v-store]: unknown mutation type: ${ type }`)
@@ -60,7 +60,7 @@ export const createStore = <S extends Options<Pattern<S>>>(options: S): Store<S>
   ) => {
     const fn = options.actions?.[type]
 
-    const notifyAsync = genNotifier(type, actionSubs, true)
+    const notifyAsync = genNotifier(type as string, actionSubs, true)
 
     if (!fn) {
       return logError(`ERROR[vue-v-store]: unknown action type: ${ type }`)

@@ -21,9 +21,9 @@ export type Mutations<S, M> = { [key in keyof M]: (state: S, payload: any) => vo
 export type Actions<S, A> = { [key in keyof A]: (context: Store<S>, payload: any) => any }
 
 export type Pattern<S extends Partial<Record<Keys, any>>> = {
-  state: State<S[Keys.state]>
-  mutations: Mutations<S[Keys.state], S[Keys.mutations]>
-  actions: Actions<S, S[Keys.actions]>
+  state?: State<S[Keys.state]>
+  mutations?: Mutations<S[Keys.state], S[Keys.mutations]>
+  actions?: Actions<S, S[Keys.actions]>
 }
 
 export type Store<S extends Partial<Record<Keys, any>>> = {
@@ -53,7 +53,7 @@ export type ActionSubscribers<S extends Pattern<S>> = {
   [K in keyof S[Keys.actions]]: SubscriberOptions[]
 }
 export type Subscribers<S extends Pattern<S>> = MutationSubscribers<S> | ActionSubscribers<S>
-export type Options<T> = T extends unknown ? Record<Keys, any> : T
+export type Options<T> = T extends unknown ? { state: any, mutations?: any, actions: any } : T
 
 export type BeforeEffectOptions = {
   wait: (...args: any) => Promise<any>
