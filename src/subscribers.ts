@@ -51,8 +51,8 @@ export const useSubscribers = <S extends Pattern<S>>() => {
     }
   }
 
-  const genNotifier = <K extends keyof Subscribers<S>>(
-    type: K,
+  const genNotifier = (
+    type: string,
     subs: Subscribers<S>,
     isAsync = false
   ): Function => {
