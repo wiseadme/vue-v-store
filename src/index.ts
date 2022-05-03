@@ -1,103 +1,32 @@
 // Vue API
 import { reactive } from 'vue'
-// Helpers
-import { logError, isAsyncFunction, hasAsyncLogic } from './helpers'
-// Subscribers
-import { useSubscribers } from './subscribers'
-// Types
-import { Store, Keys, Options, Pattern } from './types'
 
-export const createStore = <S extends Options<Pattern<S>>>(options: S): Store<S> => {
-  const state = reactive<S[Keys.state]>(options.state)
-  const {
-    actionSubs,
-    mutationSubs,
-    genNotifier,
-    subscribeAction,
-    subscribeMutation
-  } = useSubscribers<S>()
+const storeHashMap = new Map()
 
-  const commit = <K extends keyof S[Keys.mutations]>(type: K, payload: any) => {
-    const fn = options.mutations?.[type]
+export const createState = <S extends object>(id: string, stateFn: () => S) => {
+  const state = reactive(stateFn())
+  storeHashMap.set(`${ id }-state`, state)
+  return state
+}
 
-    const notify = genNotifier(type as string, mutationSubs)
+export const createActions = (id: string, actions: any) => {
+  const state = storeHashMap.get(`${ id }-state`)
 
-    if (!fn) {
-      return logError(`ERROR[vue-v-store]: unknown mutation type: ${ type }`)
-    }
+  Object.keys(actions).forEach((fn) => {
+    actions[fn] = actions[fn].bind(state)
+  })
 
-    if (isAsyncFunction(fn)) {
-      return logError('ERROR[vue-v-store]: mutation can only be a synchronous function')
-    }
+  storeHashMap.set(`${ id }-actions`, actions)
 
-    if (hasAsyncLogic(fn)) {
-      return logError(
-        'ERROR[vue-v-store]: asynchronous logic, including timers ' +
-        'and promises, cannot be used in mutations'
-      )
-    }
-    // notifying all subscribers before the mutation call
-    try {
-      notify('before')
-    } catch (err) {
-      logError('ERROR[vue-v-store]: error in before mutation subscribers')
-      logError(err as Error)
-    }
+  return actions
+}
 
-    fn(state, payload)
-    // notifying all subscribers after the mutation call
-    try {
-      notify('after')
-    } catch (err) {
-      logError('ERROR[vue-v-store]: error in before mutation subscribers')
-      logError(err as Error)
-    }
-  }
+export const defineStore = (id: string) => {
+  const state = storeHashMap.get(`${ id }-state`)
+  const actions = storeHashMap.get(`${ id }-actions`)
 
-  const dispatch = async <K extends keyof S[Keys.actions]>(
-    type: K,
-    payload?: any
-  ) => {
-    const fn = options.actions?.[type]
-
-    const notifyAsync = genNotifier(type as string, actionSubs, true)
-
-    if (!fn) {
-      return logError(`ERROR[vue-v-store]: unknown action type: ${ type }`)
-    }
-
-    // notifying all subscribers before the action call
-    try {
-      await notifyAsync('before')
-    } catch (err) {
-      logError('ERROR[vue-v-store]: error in before action subscribers')
-      logError(err as Error)
-    }
-
-    const result = await fn({
-      state,
-      commit,
-      dispatch,
-      subscribeMutation,
-      subscribeAction
-    }, payload)
-
-    // notifying all subscribers after the action call
-    try {
-      await notifyAsync('after')
-    } catch (err) {
-      logError('ERROR[vue-v-store]: error in after action subscribers')
-      logError(err as Error)
-    }
-
-    return result
-  }
-
-  return {
+  return () => ({
     state,
-    commit,
-    dispatch,
-    subscribeAction,
-    subscribeMutation
-  }
+    ...actions
+  })
 }
